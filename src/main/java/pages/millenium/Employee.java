@@ -74,6 +74,14 @@ public class Employee extends BasePage {
     @FindBys( {@FindBy(css = ".headerrow td")} )
     private List<HtmlElement> listHeaderTableService;
 
+    @Name("ArrayList of footer pagination item")
+    @FindBys( {@FindBy(css = ".footerrow2 a")} )
+    private List<HtmlElement> listFooterPaginItem;
+
+    @Name("ArrayList of all td in table after checkbox")
+    @FindBys( {@FindBy(css = "//input[contains(@id, 'Services')]//ancestor::td[@align and not (@class)]//following-sibling::td")} )
+    private List<HtmlElement> lisTdAfterCheckbox;
+
     public void getCellFromAppTable(String headingColumn) {
         int indexColumn = 0;
         for (int i = 0; i < listHeaderTableService.size(); i++) {
@@ -82,11 +90,17 @@ public class Employee extends BasePage {
                 break;
             }
         }
-        for (int i = indexColumn; i < listServiceCheckBox.size(); i += (listServiceCheckBox.size() / listHeaderTableService.size())) {
-            listServiceCheckBox.get(i).click();
+        for (int i = 1; i < listFooterPaginItem.size(); i++) {
+            if(listFooterPaginItem.get(i).getText().equals("...")) {
+                listFooterPaginItem.get(i).click();
+                i = 1;
+            }
+            for (int j = indexColumn; j < listServiceCheckBox.size(); j += (listServiceCheckBox.size() / listHeaderTableService.size())) {
+                listServiceCheckBox.get(j).click();
+            }
+            listFooterPaginItem.get(i).click();
         }
     }
-
 
     public void createNewMaleTherapist(Users users) {
         newEmployeeBut.click();
